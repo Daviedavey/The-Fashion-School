@@ -2,6 +2,7 @@ package com.thefashionschool.theFashionSchool.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -16,6 +17,12 @@ public class User implements UserDetails {
 
     @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String surname;
 
     @Column(nullable = false)
     private String password;
@@ -44,6 +51,14 @@ public class User implements UserDetails {
         this.username = username;
     }
 
+    public String getName() {return name;}
+
+    public void setName(String name) {this.name = name;}
+
+    public String getSurname() {return surname;}
+
+    public void setSurname(String surname) {this.surname = surname;}
+
     @Override
     public String getPassword() {
         return password;
@@ -69,10 +84,11 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+
     // UserDetails methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return Collections.singleton(new SimpleGrantedAuthority(role));
     }
 
     @Override

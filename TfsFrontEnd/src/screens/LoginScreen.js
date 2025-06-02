@@ -3,9 +3,11 @@ import {StyleSheet, View, KeyboardAvoidingView, Platform} from 'react-native';
 import {Button, TextInput, Text, HelperText} from 'react-native-paper';
 import axios from 'axios';
 import {API_BASE_URL} from '../api/config';
+import { login } from '../api/auth';
 
-
+let test;
 const LoginScreen = ({navigation}) => {
+const [username, setUsername] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 const [loading, setLoading] = useState(false);
@@ -21,18 +23,20 @@ const [error, setError] = useState('');
         setError('');
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-                username,
-                password
-            });
 
+            const response = await login(username, password);
             // Handle successful login
             console.log('Login successful', response.data);
-            // You would typically store the token and user data here
-            // and navigate to the home screen
+             navigation.navigate('Home')
+            // Store the token securely
+           await AsyncStorage.setItem('userToken', response.data.token);
+           // Use in subsequent requests
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+         
 
         } catch (err) {
             console.log('Login error', err.response?.data);
+            console.log(test)
             setError(err.response?.data?.message || 'Login failed. Please try again.');
         } finally {
             setLoading(false);
@@ -48,9 +52,9 @@ const [error, setError] = useState('');
                 <Text style={styles.title}>The Fashion School</Text>
 
                 <TextInput
-                    label="Email"
-                    value={email}
-                    onChangeText={setEmail}
+                    label="Username"
+                    value={username}
+                    onChangeText={setUsername}
                     mode="outlined"
                     style={styles.input}
                     autoCapitalize="none"
