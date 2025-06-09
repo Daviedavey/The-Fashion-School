@@ -2,6 +2,7 @@
 
 import com.thefashionschool.theFashionSchool.dto.RegisterRequest;
 import com.thefashionschool.theFashionSchool.dto.RegisterResponse;
+import com.thefashionschool.theFashionSchool.model.Role;
 import com.thefashionschool.theFashionSchool.model.User;
 import com.thefashionschool.theFashionSchool.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,7 @@ public class AuthService {
         user.setSurname(registerRequest.getSurname().toLowerCase());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole("STUDENT"); // Default role
+        user.setRole(Role.STUDENT); // Default role
 
         userRepository.save(user);
 

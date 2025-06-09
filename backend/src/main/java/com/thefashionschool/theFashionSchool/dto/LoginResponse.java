@@ -1,5 +1,6 @@
 package com.thefashionschool.theFashionSchool.dto;
 
+import com.thefashionschool.theFashionSchool.model.Role;
 import lombok.Data;
 
 @Data
@@ -11,7 +12,7 @@ public class LoginResponse {
     private String email;
     private String role;
 
-    public LoginResponse(String token, String username, String name,
+    public LoginResponse(String token, String username, Role rol, String name,
                          String surname, String email, String role) {
         this.token = token;
         this.username = username;
