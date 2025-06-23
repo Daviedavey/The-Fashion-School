@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
 
@@ -30,6 +31,7 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
+                .setSubject(userPrincipal.getEmail())
                 .claim("role", userPrincipal.getRole().name())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
@@ -43,8 +45,16 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key()).build()
-                .parseClaimsJws(token).getBody().getSubject();
+        // Remove "Bearer " prefix if present
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
@@ -64,5 +74,28 @@ public class JwtUtils {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
+    }
+    public boolean validateToken(String token) {
+        try {
+            // Add debug logging
+            logger.info("Validating token: " + token);
+
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key())
+                    .setAllowedClockSkewSeconds(120) // Allow 2 minute clock skew
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            logger.info("Token validated for: " + claims.getSubject());
+            return true;
+        } catch (Exception e) {
+            logger.error("Token validation error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public Serializable getExpirationFromJwtToken(String token) {
+        return jwtExpirationMs;
     }
 }

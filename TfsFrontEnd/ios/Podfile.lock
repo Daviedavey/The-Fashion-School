@@ -327,6 +327,11 @@ PODS:
   - React-jsinspector (0.72.17)
   - React-logger (0.72.17):
     - glog
+  - react-native-image-picker (8.2.1):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+  - react-native-netinfo (11.4.1):
+    - React-Core
   - react-native-safe-area-context (5.4.1):
     - React-Core
   - React-NativeModulesApple (0.72.17):
@@ -515,6 +520,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -593,6 +600,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-NativeModulesApple:
@@ -669,6 +680,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 8d95d2ed8969c2ce7eb8b4bfaccb0bb9c0423761
   React-jsinspector: 853b8631b908636bb09ef77cb217376c38a0c8ff
   React-logger: afa402da502a35728c9073804b1802861783a996
+  react-native-image-picker: 9828970e0681068ad2417963cfe8c5ea3b233215
+  react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: dde2052b903c11d677c320b599c3244021c34ce8
   React-NativeModulesApple: a3b3019ffee56cf78bbf09c48e056072f3bb4ea4
   React-perflogger: 785b0063af5178298a61b54bb46aae9a19c7bbb5

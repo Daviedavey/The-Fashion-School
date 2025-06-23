@@ -31,6 +31,8 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(User user) {
+
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
         return new UserDetailsImpl(
                 user.getUsername(),
                 user.getPassword(),
@@ -38,7 +40,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getSurname(),
                 user.getEmail(),
                 user.getRole(),
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
+                Collections.singleton(authority)
         );
     }
 

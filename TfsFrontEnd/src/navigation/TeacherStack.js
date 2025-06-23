@@ -2,8 +2,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import TeacherDashBoardScreen from '../screens/TeacherDashBoardScreen';
 import UploadAssignmentsScreen from '../screens/UploadAssignmentsScreen';
-import UpdateBlogScreen from '../screens/UpdateBlogScreen';
+import BlogUploadScreen from '../screens/BlogUploadScreen';
 import ViewPortfolioScreen from '../screens/ViewPortfolioScreen';
+import UpdateBlogScreen from '../screens/UpdateBlogScreen';
 
 const Stack = createStackNavigator();
 
@@ -12,8 +13,9 @@ export default function TeacherStack() {
      <Stack.Navigator>
       <Stack.Screen name="TeacherDashBoard" component={TeacherDashBoardScreen} />
       <Stack.Screen name="UploadAssignments" component={UploadAssignmentsScreen} />
-      <Stack.Screen name="UpdateBlog" component={UpdateBlogScreen} />
+      <Stack.Screen name="UploadBlog" component={BlogUploadScreen} />
       <Stack.Screen name="ViewPortfolio" component={ViewPortfolioScreen} />
+      <Stack.Screen name="CreatedBlogs" component={UpdateBlogScreen} />
     </Stack.Navigator>
   );
 }
