@@ -1,25 +1,22 @@
 import axios from 'axios';
 import { API_BASE_URL } from './config';
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 export const isTeacher = (token) => {
   try {
-    const decoded = jwt_decode(token);
+    const decoded = jwtDecode(token);
     return decoded.role === 'TEACHER';
   } catch (e) {
+    console.error('JWT decode error:', e)
     return false;
   }
 };
 
-export const verifyToken = async (token) => {
+export const verifyToken = (token) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/auth/validate`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    return response.data.valid;
-  } catch (error) {
+    const decoded = jwtDecode(token);
+    return decoded.exp * 1000 > Date.now(); // Local expiration check first
+  } catch {
     return false;
   }
 };
@@ -63,8 +60,11 @@ export const login = async (username, password) => {
     });
     
     if (response.data && response.data.token) {
+      const decoded = jwtDecode(response.data.token);
+      console.log('Decoded token:', decoded);
       return response;
     }
+
     throw new Error('Invalid response format');
   } catch (error) {
     if (error.response) {

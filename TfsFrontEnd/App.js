@@ -1,3 +1,11 @@
+import {decode, encode} from 'base-64'
+if (!global.btoa) {
+    global.btoa = encode;
+}
+if (!global.atob) {
+    global.atob = decode;
+}
+
 import React from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
@@ -25,7 +33,8 @@ export default function App() {
       const token = await AsyncStorage.getItem('userToken');
       if (token) {
         // Verify token is still valid
-        const isValid = await verifyToken(token); // Add this function
+        const isValid = verifyToken(token); 
+      
         if (isValid) {
           const teacherFlag = isTeacher(token);
           setIsTeacherUser(teacherFlag);

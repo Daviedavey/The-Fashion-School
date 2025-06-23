@@ -1,8 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState} from 'react';
 import {StyleSheet, View, KeyboardAvoidingView, Platform} from 'react-native';
 import {Button, TextInput, Text, HelperText} from 'react-native-paper';
 import axios from 'axios';
 import { login } from '../api/auth';
+import { jwtDecode } from 'jwt-decode';
 
 
 let test;
@@ -38,8 +40,11 @@ const [error, setError] = useState('');
              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
              await onLoginSuccess(token, isTeacherFlag); // ✅ Notify App.js
              console.log('Login successful', response.data);
-             await AsyncStorage.setItem('userToken', token);
-             await AsyncStorage.setItem('userRole', role); // Also store role separately
+             await AsyncStorage.setItem('userToken', response.data.token);
+             await AsyncStorage.setItem('userRole', response.data.role); // Also store role separately
+             const decoded = jwtDecode(token);
+             console.log('Token expires at:', new Date(decoded.exp * 1000));
+             console.log('Current time:', new Date());
              // Debug storage contents
              console.log(await AsyncStorage.getAllKeys());
         } catch (err) {

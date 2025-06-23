@@ -10,10 +10,10 @@ public class LoginResponse {
     private String name;
     private String surname;
     private String email;
-    private String role;
+    private Role role;
 
-    public LoginResponse(String token, String username, Role rol, String name,
-                         String surname, String email, String role) {
+    public LoginResponse(String token, String username, Role role, String name,
+                         String surname, String email) {
         this.token = token;
         this.username = username;
         this.name = name;
