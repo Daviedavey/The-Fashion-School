@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {StyleSheet, View, KeyboardAvoidingView, Platform} from 'react-native';
 import {Button, TextInput, Text, HelperText} from 'react-native-paper';
 import axios from 'axios';
-import {API_BASE_URL} from '../api/config';
+import { login } from '../api/auth';
 
 
-const LoginScreen = ({navigation}) => {
+let test;
+const LoginScreen = ({navigation, onLoginSuccess}) => {
+const [username, setUsername] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 const [loading, setLoading] = useState(false);
@@ -19,22 +21,40 @@ const [error, setError] = useState('');
 
         setLoading(true);
         setError('');
+        console.log(navigation.getState());
+
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-                username,
-                password
-            });
 
-            // Handle successful login
-            console.log('Login successful', response.data);
-            // You would typically store the token and user data here
-            // and navigate to the home screen
+            const response = await login(username, password); // API call
+            console.log('Login response:', response); // Add this to inspect full object
 
+            if (!response || !response.data || !response.data.token) {
+            throw new Error('Invalid response from server');
+             }
+             const token = response.data.token;
+             const isTeacherFlag = response.data.role === 'TEACHER'; // or however you determine the role
+ 
+             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+             await onLoginSuccess(token, isTeacherFlag); // ✅ Notify App.js
+             console.log('Login successful', response.data);
+             await AsyncStorage.setItem('userToken', token);
+             await AsyncStorage.setItem('userRole', role); // Also store role separately
+             // Debug storage contents
+             console.log(await AsyncStorage.getAllKeys());
         } catch (err) {
-            console.log('Login error', err.response?.data);
-            setError(err.response?.data?.message || 'Login failed. Please try again.');
-        } finally {
+            console.log('Login error', err);
+            if (err.response) {
+            console.log('Server responded:', err.response.data);
+            setError(err.response.data.message || 'Login failed. Please try again.');
+  } else if (err.request) {
+             console.log('No response received:', err.request);
+             setError('No response from server. Check your network or server status.');
+  } else {
+             console.log('Other error:', err.message);
+             setError('An unexpected error occurred.');
+  }
+} finally {
             setLoading(false);
         }
     };
@@ -48,9 +68,9 @@ const [error, setError] = useState('');
                 <Text style={styles.title}>The Fashion School</Text>
 
                 <TextInput
-                    label="Email"
-                    value={email}
-                    onChangeText={setEmail}
+                    label="Username"
+                    value={username}
+                    onChangeText={setUsername}
                     mode="outlined"
                     style={styles.input}
                     autoCapitalize="none"
@@ -88,7 +108,7 @@ const [error, setError] = useState('');
                 >
                     Don't have an account? Register
                 </Button>
-
+                
                 <Button
                     mode="text"
                     onPress={() => navigation.navigate('ForgotPassword')}
